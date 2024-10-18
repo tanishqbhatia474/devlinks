@@ -1,3 +1,4 @@
+//Route
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
@@ -17,3 +18,4 @@ const handler = NextAuth(authOptions);
 
 // Export handler for GET and POST methods
 export { handler as GET, handler as POST };
+
