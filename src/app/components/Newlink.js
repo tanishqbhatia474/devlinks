@@ -3,14 +3,15 @@ import React, { useState } from 'react';
 
 const LinkTreeEdit = ({ onSave }) => {
   const [links, setLinks] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const platforms = [
-    { name: 'GitHub', color: 'bg-gray-800' },
-    { name: 'YouTube', color: 'bg-red-600' },
-    { name: 'LinkedIn', color: 'bg-blue-600' },
-    { name: 'Twitter', color: 'bg-sky-500' },
-    { name: 'Instagram', color: 'bg-pink-600' },
-    { name: 'Stack Overflow', color: 'bg-orange-500' },
+    { name: 'GitHub', color: 'bg-gray-800', validUrl: /^https:\/\/github\.com\// },
+    { name: 'YouTube', color: 'bg-red-600', validUrl: /^https:\/\/(www\.)?youtube\.com\/|https:\/\/youtu\.be\// },
+    { name: 'LinkedIn', color: 'bg-blue-600', validUrl: /^https:\/\/(www\.)?linkedin\.com\// },
+    { name: 'Twitter', color: 'bg-sky-500', validUrl: /^https:\/\/(www\.)?twitter\.com\// },
+    { name: 'Instagram', color: 'bg-pink-600', validUrl: /^https:\/\/(www\.)?instagram\.com\// },
+    { name: 'Stack Overflow', color: 'bg-orange-500', validUrl: /^https:\/\/(www\.)?stackoverflow\.com\// },
   ];
 
   const addLink = () => {
@@ -20,47 +21,44 @@ const LinkTreeEdit = ({ onSave }) => {
   const updateLink = (index, field, value) => {
     const updatedLinks = [...links];
     updatedLinks[index][field] = value;
+
     if (field === 'platform') {
       const selectedPlatform = platforms.find(p => p.name === value);
       updatedLinks[index].color = selectedPlatform ? selectedPlatform.color : '';
     }
+
+    // Validate the URL if it's the 'url' field
+    if (field === 'url') {
+      const selectedPlatform = platforms.find(p => p.name === updatedLinks[index].platform);
+      if (selectedPlatform && !selectedPlatform.validUrl.test(value)) {
+        setErrors(prev => ({ ...prev, [index]: `Invalid URL for ${updatedLinks[index].platform}` }));
+      } else {
+        const newErrors = { ...errors };
+        delete newErrors[index];  // Remove error if valid
+        setErrors(newErrors);
+      }
+    }
+
     setLinks(updatedLinks);
     onSave(updatedLinks);
   };
 
   const removeLink = (index) => {
     const updatedLinks = links.filter((_, i) => i !== index);
+    const newErrors = { ...errors };
+    delete newErrors[index];  // Remove error on removal
     setLinks(updatedLinks);
+    setErrors(newErrors);
     onSave(updatedLinks);
   };
 
   const saveLinks = () => {
-    onSave(links);
-    console.log('Saving links:', links);
-  };
-
-  // Drag and Drop Handlers
-  const handleDragStart = (e, index) => {
-    e.dataTransfer.setData('text/plain', index);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault(); // Prevent default to allow drop
-  };
-
-  const handleDrop = (e, index) => {
-    const draggedIndex = e.dataTransfer.getData('text/plain');
-    const draggedLink = links[draggedIndex];
-    const updatedLinks = [...links];
-
-    // Remove the dragged link from its original position
-    updatedLinks.splice(draggedIndex, 1);
-
-    // Insert it at the new position
-    updatedLinks.splice(index, 0, draggedLink);
-    
-    setLinks(updatedLinks);
-    onSave(updatedLinks); // Update saved links after reordering
+    if (Object.keys(errors).length === 0) {
+      onSave(links);
+      console.log('Saving links:', links);
+    } else {
+      console.log('Please fix the errors before saving.');
+    }
   };
 
   return (
@@ -94,11 +92,7 @@ const LinkTreeEdit = ({ onSave }) => {
           links.map((link, index) => (
             <div
               key={index}
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, index)}
-              className="mb-4 p-3 sm:p-4 border rounded-lg cursor-move"
+              className="mb-4 p-3 sm:p-4 border rounded-lg"
             >
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
                 <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-0">Link #{index + 1}</h2>
@@ -133,6 +127,9 @@ const LinkTreeEdit = ({ onSave }) => {
                   className="w-full p-2 border rounded-lg text-sm"
                   placeholder="https://www.example.com/profile"
                 />
+                {errors[index] && (
+                  <p className="text-red-500 text-xs mt-1">{errors[index]}</p>
+                )}
               </div>
             </div>
           ))
@@ -141,7 +138,7 @@ const LinkTreeEdit = ({ onSave }) => {
         <button
           onClick={saveLinks}
           className="w-full bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 text-sm sm:text-base"
-          disabled={links.length === 0}
+          disabled={links.length === 0 || Object.keys(errors).length > 0}
         >
           Save
         </button>
