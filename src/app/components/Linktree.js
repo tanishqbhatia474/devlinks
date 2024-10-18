@@ -40,7 +40,7 @@ const LinkButton = ({ url, label, color, index, handleDragStart, handleDragOver,
   </div>
 );
 
-const LinkTree = ({ links, setLinks }) => {
+const LinkTree = ({ links, setLinks, profilePic }) => {
   // Drag and Drop Handlers
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('text/plain', index);
@@ -65,11 +65,17 @@ const LinkTree = ({ links, setLinks }) => {
   };
 
   const totalDivs = 8; // Total number of empty divs to display
-
+  const profilePicUrl ='/images/profile.png'
   return (
     <div className="w-full max-w-md mx-auto p-4 sm:p-6 bg-white rounded-3xl shadow-lg">
       <div className="flex flex-col items-center mb-4 sm:mb-6">
-        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-200 rounded-full mb-3 sm:mb-4 shadow-inner"></div>
+        <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 sm:mb-4 shadow-inner">
+          <img
+            src={profilePicUrl} // Pass the profile picture URL here
+            alt="Profile Picture"
+            className="w-full h-full object-cover" // Make the image cover the entire circle
+          />
+        </div>
         <div className="h-3 sm:h-4 bg-gray-200 w-2/3 sm:w-3/4 rounded mb-2"></div>
         <div className="h-2 sm:h-3 bg-gray-200 w-1/2 rounded"></div>
       </div>
