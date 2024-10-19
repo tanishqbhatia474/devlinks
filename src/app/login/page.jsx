@@ -8,7 +8,7 @@ export default function Login() {
 
   // Function to handle Google sign-in
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: 'http://localhost:3000/' });
+    signIn('google', { callbackUrl: 'https://devlinks-ruddy-two.vercel.app/' });
   };
 
   useEffect(() => {
