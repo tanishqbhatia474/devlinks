@@ -1,6 +1,6 @@
-//Linktree
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Import Image from next/image
 
 const ExternalLinkIcon = () => (
   <svg
@@ -66,21 +66,24 @@ const LinkTree = ({ links, setLinks, profilePic }) => {
   };
 
   const totalDivs = 8; // Total number of empty divs to display
-  const profilePicUrl ='/images/profile.png'
+  const profilePicUrl = '/images/profile.png'; // Profile picture URL
+
   return (
     <div className="w-full max-w-md mx-auto p-4 sm:p-6 bg-white rounded-3xl shadow-lg">
       <div className="flex flex-col items-center mb-4 sm:mb-6">
         <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 sm:mb-4 shadow-inner">
-          <img
-            src={profilePicUrl} // Pass the profile picture URL here
+          <Image
+            src={profilePicUrl} // Updated to use next/image
             alt="Profile Picture"
-            className="w-full h-full object-cover" // Make the image cover the entire circle
+            layout="fill"
+            objectFit="cover" // Make sure the image fills and covers the container
+            quality={100} // Optional, adjust the quality if needed
           />
         </div>
         <div className="h-3 sm:h-4 bg-gray-200 w-2/3 sm:w-3/4 rounded mb-2"></div>
         <div className="h-2 sm:h-3 bg-gray-200 w-1/2 rounded"></div>
       </div>
-      
+
       <div className="space-y-2 sm:space-y-3">
         {/* Render links and fill the rest with empty divs */}
         {links.map((link, index) => (
@@ -112,4 +115,3 @@ const LinkTree = ({ links, setLinks, profilePic }) => {
 };
 
 export default LinkTree;
-
