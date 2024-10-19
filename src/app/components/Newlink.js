@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import Image from 'next/image'; // Importing Image from next/image
 
 const LinkTreeEdit = ({ onSave }) => {
   const [links, setLinks] = useState([]);
@@ -24,18 +23,18 @@ const LinkTreeEdit = ({ onSave }) => {
     updatedLinks[index][field] = value;
 
     if (field === 'platform') {
-      const selectedPlatform = platforms.find((p) => p.name === value);
+      const selectedPlatform = platforms.find(p => p.name === value);
       updatedLinks[index].color = selectedPlatform ? selectedPlatform.color : '';
     }
 
     // Validate the URL if it's the 'url' field
     if (field === 'url') {
-      const selectedPlatform = platforms.find((p) => p.name === updatedLinks[index].platform);
+      const selectedPlatform = platforms.find(p => p.name === updatedLinks[index].platform);
       if (selectedPlatform && !selectedPlatform.validUrl.test(value)) {
-        setErrors((prev) => ({ ...prev, [index]: `Invalid URL for ${updatedLinks[index].platform}` }));
+        setErrors(prev => ({ ...prev, [index]: `Invalid URL for ${updatedLinks[index].platform}` }));
       } else {
         const newErrors = { ...errors };
-        delete newErrors[index]; // Remove error if valid
+        delete newErrors[index];  // Remove error if valid
         setErrors(newErrors);
       }
     }
@@ -47,7 +46,7 @@ const LinkTreeEdit = ({ onSave }) => {
   const removeLink = (index) => {
     const updatedLinks = links.filter((_, i) => i !== index);
     const newErrors = { ...errors };
-    delete newErrors[index]; // Remove error on removal
+    delete newErrors[index];  // Remove error on removal
     setLinks(updatedLinks);
     setErrors(newErrors);
     onSave(updatedLinks);
@@ -66,9 +65,7 @@ const LinkTreeEdit = ({ onSave }) => {
     <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
       <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6">
         <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">Customize your links</h1>
-        <p className="mb-4 sm:mb-6 text-sm sm:text-base">
-          Add/edit/remove links below and then share all your profiles with the world!
-        </p>
+        <p className="mb-4 sm:mb-6 text-sm sm:text-base">Add/edit/remove links below and then share all your profiles with the world!</p>
 
         <button
           onClick={addLink}
@@ -80,23 +77,23 @@ const LinkTreeEdit = ({ onSave }) => {
         {links.length === 0 ? (
           <div className="text-center p-4 sm:p-8 bg-gray-50 rounded-lg">
             <div className="mb-4">
-              {/* Replace <img> with <Image /> */}
-              <Image
-                src="/images/illustration-empty.svg" // Update with your image path
+              <img
+                src="images/illustration-empty.svg"
                 alt="Get started illustration"
-                width={128} // Provide width and height
-                height={128} // or whatever dimensions fit your design
+                className="mx-auto w-32 sm:w-48"
               />
             </div>
-            <h2 className="text-lg sm:text-xl font-bold mb-2">Let's get you started</h2>
+            <h2 className="text-lg sm:text-xl font-bold mb-2">Let&apos;s get you started</h2>
             <p className="text-gray-600 text-sm sm:text-base">
-              Use the "Add new link" button to get started. Once you have more than one link, you can reorder and edit
-              them. We're here to help you share your profiles with everyone!
+              Use the &quot;Add new link&quot; button to get started. Once you have more than one link, you can reorder and edit them. We&apos;re here to help you share your profiles with everyone!
             </p>
           </div>
         ) : (
           links.map((link, index) => (
-            <div key={index} className="mb-4 p-3 sm:p-4 border rounded-lg">
+            <div
+              key={index}
+              className="mb-4 p-3 sm:p-4 border rounded-lg"
+            >
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
                 <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-0">Link #{index + 1}</h2>
                 <button
@@ -130,7 +127,9 @@ const LinkTreeEdit = ({ onSave }) => {
                   className="w-full p-2 border rounded-lg text-sm"
                   placeholder="https://www.example.com/profile"
                 />
-                {errors[index] && <p className="text-red-500 text-xs mt-1">{errors[index]}</p>}
+                {errors[index] && (
+                  <p className="text-red-500 text-xs mt-1">{errors[index]}</p>
+                )}
               </div>
             </div>
           ))
