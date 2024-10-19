@@ -70,6 +70,7 @@ const LinkTree = ({ links, setLinks, profilePic }) => {
 
   return (
     <div className="w-full max-w-md mx-auto p-4 sm:p-6 bg-white rounded-3xl shadow-lg">
+
       <div className="flex flex-col items-center mb-4 sm:mb-6">
         <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 sm:mb-4 shadow-inner">
           <Image
