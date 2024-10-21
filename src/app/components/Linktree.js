@@ -70,15 +70,14 @@ const LinkTree = ({ links, setLinks, profilePic }) => {
 
   return (
     <div className="w-full max-w-md mx-auto p-4 sm:p-6 bg-white rounded-3xl shadow-lg">
-
       <div className="flex flex-col items-center mb-4 sm:mb-6">
         <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 sm:mb-4 shadow-inner">
           <Image
-            src={profilePicUrl} // Updated to use next/image
+            src={profilePicUrl} 
             alt="Profile Picture"
             layout="fill"
-            objectFit="cover" // Make sure the image fills and covers the container
-            quality={100} // Optional, adjust the quality if needed
+            objectFit="cover" 
+            quality={100} 
           />
         </div>
         <div className="h-3 sm:h-4 bg-gray-200 w-2/3 sm:w-3/4 rounded mb-2"></div>

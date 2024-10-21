@@ -36,11 +36,12 @@ const Page = () => {
 
   // If authenticated, render the page content
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 to-blue-500 ">
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 to-blue-500">
       <Header />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-8">
-          <div className="ml-4 w-full md:w-1/3 lg:w-1/4 order-2 md:order-1">
+          <div className="w-full md:w-1/3 lg:w-1/4 order-2 md:order-1 md:ml-4 mx-auto md:mx-0">
+            {/* Centered in mobile view with mx-auto */}
             <LinkTree links={savedLinks} setLinks={setSavedLinks} />
           </div>
           <div className="w-full md:w-2/3 lg:w-3/4 order-1 md:order-2">
@@ -50,6 +51,7 @@ const Page = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Page;
