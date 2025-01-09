@@ -21,8 +21,8 @@ export default function Login() {
   }, []);
 
   return (
-    <div className={`flex flex-col items-center justify-center h-screen ${isBlack ? 'bg-black' : 'bg-pink-600'}`}>
-      <h1 className={`text-5xl md:text-9xl font-bold ${isBlack ? 'text-pink-600' : 'text-black-800'} mb-2`}>
+    <div className={`flex flex-col items-center justify-center h-screen ${isBlack ? 'bg-black' : 'bg-black'}`}>
+      <h1 className={`text-5xl md:text-9xl font-bold text-pink-600 mb-2`}>
         DevLinks
       </h1>
       <p className="text-md md:text-lg text-gray-600 mb-6 text-center">Login to access your dashboard</p>
@@ -33,5 +33,5 @@ export default function Login() {
         Sign in with Google
       </button>
     </div>
-  );
+  ); 
 }

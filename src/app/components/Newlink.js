@@ -1,19 +1,19 @@
 'use client';
 import React, { useState } from 'react';
-
-const LinkTreeEdit = ({ onSave }) => {
+import axios from 'axios';
+const LinkTreeEdit = ({ userId, onSave }) => {
   const [links, setLinks] = useState([]);
   const [errors, setErrors] = useState({});
-
+  const [loading, setLoading] = useState(false);
   const platforms = [
-    { name: 'GitHub', color: 'bg-gray-800', validUrl: /^https:\/\/github\.com\// },
-    { name: 'YouTube', color: 'bg-red-600', validUrl: /^https:\/\/(www\.)?youtube\.com\/|https:\/\/youtu\.be\// },
-    { name: 'LinkedIn', color: 'bg-blue-600', validUrl: /^https:\/\/(www\.)?linkedin\.com\// },
-    { name: 'Twitter', color: 'bg-sky-500', validUrl: /^https:\/\/(www\.)?twitter\.com\// },
-    { name: 'Instagram', color: 'bg-pink-600', validUrl: /^https:\/\/(www\.)?instagram\.com\// },
-    { name: 'Stack Overflow', color: 'bg-orange-500', validUrl: /^https:\/\/(www\.)?stackoverflow\.com\// },
+    { name: 'GitHub', color: 'bg-gray-800', field: 'github', validUrl: /^https:\/\/github\.com\// },
+    { name: 'YouTube', color: 'bg-red-600', field: 'youtube', validUrl: /^https:\/\/(www\.)?youtube\.com\/|https:\/\/youtu\.be\// },
+    { name: 'LinkedIn', color: 'bg-blue-600', field: 'linkedin', validUrl: /^https:\/\/(www\.)?linkedin\.com\// },
+    { name: 'Twitter', color: 'bg-sky-500', field: 'twitter', validUrl: /^https:\/\/(www\.)?twitter\.com\// },
+    { name: 'Instagram', color: 'bg-pink-600', field: 'instagram', validUrl: /^https:\/\/(www\.)?instagram\.com\// },
+    { name: 'Stack Overflow', color: 'bg-orange-500', field: 'stackoverflow', validUrl: /^https:\/\/(www\.)?stackoverflow\.com\// },
   ];
-
+  console.log("userId", userId);
   const addLink = () => {
     setLinks([...links, { platform: '', url: '', color: '' }]);
   };
@@ -23,41 +23,57 @@ const LinkTreeEdit = ({ onSave }) => {
     updatedLinks[index][field] = value;
 
     if (field === 'platform') {
-      const selectedPlatform = platforms.find(p => p.name === value);
+      const selectedPlatform = platforms.find((p) => p.name === value);
       updatedLinks[index].color = selectedPlatform ? selectedPlatform.color : '';
     }
 
     // Validate the URL if it's the 'url' field
     if (field === 'url') {
-      const selectedPlatform = platforms.find(p => p.name === updatedLinks[index].platform);
+      const selectedPlatform = platforms.find((p) => p.name === updatedLinks[index].platform);
       if (selectedPlatform && !selectedPlatform.validUrl.test(value)) {
-        setErrors(prev => ({ ...prev, [index]: `Invalid URL for ${updatedLinks[index].platform}` }));
+        setErrors((prev) => ({ ...prev, [index]: `Invalid URL for ${updatedLinks[index].platform}` }));
       } else {
         const newErrors = { ...errors };
-        delete newErrors[index];  // Remove error if valid
+        delete newErrors[index]; // Remove error if valid
         setErrors(newErrors);
       }
     }
 
     setLinks(updatedLinks);
-    onSave(updatedLinks);
   };
 
   const removeLink = (index) => {
     const updatedLinks = links.filter((_, i) => i !== index);
     const newErrors = { ...errors };
-    delete newErrors[index];  // Remove error on removal
+    delete newErrors[index]; // Remove error on removal
     setLinks(updatedLinks);
     setErrors(newErrors);
-    onSave(updatedLinks);
   };
 
-  const saveLinks = () => {
-    if (Object.keys(errors).length === 0) {
-      onSave(links);
-      console.log('Saving links:', links);
-    } else {
+  const saveLinks = async () => {
+    if (Object.keys(errors).length > 0) {
       console.log('Please fix the errors before saving.');
+      return;
+    }
+
+    // Map links to the backend schema
+    const mappedLinks = platforms.reduce((acc, platform) => {
+      const link = links.find((l) => l.platform === platform.name);
+      acc[platform.field] = link ? link.url : ''; // Assign the URL or an empty string if not present
+      return acc;
+    }, {});
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`/api/user/${userId}`, mappedLinks);
+      console.log('Response from server:', response.data);
+      setLoading(false);
+      alert('Links saved successfully!');
+      onSave(mappedLinks); // Callback to propagate saved data if needed
+    } catch (error) {
+      console.error('Error saving links:', error);
+      setLoading(false);
+      alert('Failed to save links.');
     }
   };
 
@@ -90,10 +106,7 @@ const LinkTreeEdit = ({ onSave }) => {
           </div>
         ) : (
           links.map((link, index) => (
-            <div
-              key={index}
-              className="mb-4 p-3 sm:p-4 border rounded-lg"
-            >
+            <div key={index} className="mb-4 p-3 sm:p-4 border rounded-lg">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
                 <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-0">Link #{index + 1}</h2>
                 <button
@@ -137,10 +150,12 @@ const LinkTreeEdit = ({ onSave }) => {
 
         <button
           onClick={saveLinks}
-          className="w-full bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 text-sm sm:text-base"
-          disabled={links.length === 0 || Object.keys(errors).length > 0}
+          className={`w-full bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 text-sm sm:text-base ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={loading}
         >
-          Save
+          {loading ? 'Saving...' : 'Save'}
         </button>
       </div>
     </div>
