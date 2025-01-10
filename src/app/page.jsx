@@ -32,12 +32,7 @@ const Page = () => {
     <div className="bg-purple-500">
       <Header />
       <div className="">
-        <div className="flex">
-          <LinkTree userId={session.user.id} links={savedLinks} setLinks={handleSaveLinks} />
-        </div>
-        <div className="md:w-2/3 lg:w-3/4 order-1 md:order-2">
-          {/* <LinkTreeEdit userId={session.user.id} onSave={handleSaveLinks} initialLinks={savedLinks} /> */}
-        </div>
+      <LinkTree userId={session.user.id} links={savedLinks} setLinks={handleSaveLinks} />
       </div>
     </div>
   );

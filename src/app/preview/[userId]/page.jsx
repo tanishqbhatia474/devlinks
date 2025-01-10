@@ -59,37 +59,46 @@ const PreviewPage = () => {
   }
 
   return (
-    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex flex-col items-center justify-center">
-      <button
-        className="mb-4 px-4 py-2 bg-purple-600 text-white rounded-md"
-        onClick={handleBack}
-      >
-        Back to Editor
-      </button>
-      {savedLinks.length > 0 ? (
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-3xl shadow-lg p-4 sm:p-6">
-            {savedLinks.map((link, index) => (
-              <div
-                key={index}
-                className={`flex items-center justify-between px-4 py-2 mb-3 text-white rounded-lg shadow-md text-sm ${link.color}`}
+    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex flex-col items-center justify-center relative">
+    {/* Back to Editor Button */}
+    <button
+      className="absolute top-6 left-6 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200"
+      onClick={handleBack}
+    >
+      Back to Editor
+    </button>
+  
+    {/* Interactive Heading */}
+    <h1 className="mb-6 text-3xl sm:text-4xl font-bold text-white animate-bounce tracking-wide">
+      This is my Linktree!
+    </h1>
+  
+    {/* Links Section */}
+    {savedLinks.length > 0 ? (
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-3xl shadow-lg p-4 sm:p-6">
+          {savedLinks.map((link, index) => (
+            <div
+              key={index}
+              className={`flex items-center justify-between px-4 py-2 mb-3 text-white rounded-lg shadow-md text-sm hover:scale-105 transition-transform duration-200 ${link.color}`}
+            >
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-full"
               >
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full text-center"
-                >
-                  {link.platform}
-                </a>
-              </div>
-            ))}
-          </div>
+                {link.platform}
+              </a>
+            </div>
+          ))}
         </div>
-      ) : (
-        <p className="text-gray-200">No links available to preview.</p>
-      )}
-    </div>
+      </div>
+    ) : (
+      <p className="text-gray-200">No links available to preview.</p>
+    )}
+  </div>
+  
   );
 };
 
