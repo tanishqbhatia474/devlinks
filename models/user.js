@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  twitter: { type: String, required: false },
-  github: { type: String, required: false },
-  youtube: { type: String, required: false },
-  instagram: { type: String, required: false },
-  linkedin: { type: String, required: false },
-  stackoverflow: { type: String, required: false },
+  email: { type: String, required: true, unique: true },
+  username: { type: String, required: true },
+  image: { type: String },
+  twitter: { type: String },
+  github: { type: String },
+  youtube: { type: String },
+  instagram: { type: String },
+  linkedin: { type: String },
+  stackoverflow: { type: String },
+  // Add more social links as needed
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

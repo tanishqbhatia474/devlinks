@@ -51,6 +51,7 @@ const handler = NextAuth({
             linkedin: "",
             stackoverflow: "",
           });
+          console.log(`New user created: ${profile.email}`);
         }
 
         return true; // Allow sign-in

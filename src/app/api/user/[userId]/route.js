@@ -13,7 +13,7 @@ export async function POST(req, { params }) {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { twitter, github, youtube, instagram, linkedin, stackoverflow },
-      { new: true, upsert: true } // Upsert creates a new document if it doesn't exist
+      { new: true } // Only update existing user
     );
 
     if (!updatedUser) {
